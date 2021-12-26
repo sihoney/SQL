@@ -52,7 +52,7 @@ order by min(salary) desc, avg(salary) asc;
 가장 오래 근속한 직원의 입사일은 언제인가요? 다음 형식으로 출력해주세요.
 예) 2001-01-13 토요일
 */
-select to_char(min(hire_date), 'YYYY"-"MM"-"DD" 토요일"') 
+select to_char(min(hire_date), 'YYYY-MM-DD day') 
 from employees;
 
 /*
@@ -86,13 +86,14 @@ order by max(salary) - min(salary) desc;
 출력은 관리자별로 평균급여가 5000이상 중에 평균급여 최소급여 최대급여를 출력합니다.
 평균급여의 내림차순으로 정렬하고 평균급여는 소수점 첫째짜리에서 반올림 하여 출력합니다.
 */
-select round(avg(salary)),
+select manager_id, 
+    round(avg(salary)),
     min(salary),
     max(salary)
 from employees
 where hire_date >= '05/01/01'
-having avg(salary) >= 500
 group by manager_id
+having avg(salary) >= 5000
 order by avg(salary) desc;
 
 /*
@@ -102,10 +103,14 @@ order by avg(salary) desc;
 이후입사자는 ‘상장이후입사’ optDate 컬럼의 데이터로 출력하세요.
 정렬은 입사일로 오름차순으로 정렬합니다.
 */
-select first_name, case when hire_date < '02/12/31' then '창립맴버'
+select employee_id,
+        first_name,
+        salary,
+        case when hire_date < '02/12/31' then '창립맴버'
             when hire_date < '04/12/31' then '03년입사'
             when hire_date < '05/12/31' then '04년입사'
             else '상장이후입사'
-        end onDate
+        end onDate,
+        hire_date
 from employees
 order by hire_date;
